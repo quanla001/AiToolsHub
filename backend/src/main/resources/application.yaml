@@ -1,0 +1,126 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 367713178344-ogfojf6q5ppaiq43n6k5vembu8k3k6f9.apps.googleusercontent.com
+            client-secret: #{GOOGLE_CLIENT_SECRET}
+            scope: profile, email
+          github: # Thêm cấu hình cho GitHub
+            client-id: Ov23liwkG6qkdp26nLyH
+            client-secret: #{GITHUB_CLIENT_SECRET}
+            scope: user:email , read:user
+
+        provider:
+          google:
+            authorization-uri: https://accounts.google.com/o/oauth2/auth
+            token-uri: https://oauth2.googleapis.com/token
+            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
+          github: # Cấu hình endpoint mặc định của GitHub
+            authorization-uri: https://github.com/login/oauth/authorize
+            token-uri: https://github.com/login/oauth/access_token
+            user-info-uri: https://api.github.com/user
+            user-name-attribute: login  # Thuộc tính chính để lấy username từ GitHub
+  application:
+    name: ai-tools-hub
+  datasource:
+    url: #AIVEN_URL
+    username: #{AIVEN_USERNAME}
+    password: #{AIVEN_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    sql:
+      init:
+        mode: always
+        schema-locations: classpath:schema.sql
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+  docker:
+    compose:
+      enabled: false
+  mvc:
+    async:
+      request-timeout: 300000
+  task:
+    execution:
+      pool:
+        core-size: 10
+        max-size: 50
+        queue-capacity: 100
+        keep-alive: 10s
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  logging:
+    level:
+      org:
+        hibernate:
+          SQL: DEBUG
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: #
+    password: #
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+jwt:
+  secret: MySuperSecretKeyForJWTEncryptionMySuperSecretKeyForJWTEncryption==
+  expiration: 86400000  # 24 hours
+
+server:
+  port: 8080
+
+#ElevenLabs
+elevenlabs:
+  api:
+    url: https://api.elevenlabs.io/v1/text-to-speech
+    key: #{ELEVENLABS_API_KEY}
+    url1: https://api.elevenlabs.io/v1/sound-generation
+
+huggingface:
+  api:
+    token: #{HUGGINGFACE_API_TOKEN}
+  models:
+    model1:
+      url: https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0
+    model2:
+      url: https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell
+    texttomusic:
+      url: https://api-inference.huggingface.co/models/facebook/musicgen-small
+
+# Google Cloud Storage
+gcs:
+  project-id: focal-inquiry-452917-r5
+  bucket: aitoolhub
+  credentials-path: #path/to/your/credentials.json
+  base:
+    url: https://storage.googleapis.com/aitoolhub/
+
+# Google Gemini
+google:
+  api:
+    key:
+  models:
+    gemini:
+      url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent
+
+eureka:
+  client:
+    enabled: false
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
